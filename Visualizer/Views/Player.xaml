@@ -41,8 +41,6 @@
                 <Label Text="{Binding SongCurrentTime, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" FontSize="16" TextColor="#BBBBBB"/>
                 <Label Text="{Binding SongTotalTime, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" FontSize="14" TextColor="#666666" />
             </VerticalStackLayout>
-            
-            <Button Grid.Column="3" Text="Load" Command="{Binding LoadCommand}"/>
         </Grid>
 
         <!-- Waveform Display -->
@@ -70,15 +68,6 @@
                 Grid.Column="1" 
                 Text="Stop" 
                 Command="{Binding StopCommand}"/>
-            
-            <Slider 
-                Minimum="0"
-                Maximum="1"
-                Value="{Binding Volume}"
-                Grid.Column="2" 
-                WidthRequest="100" 
-                VerticalOptions="Center" 
-                ToolTipProperties.Text="Volume"/>
             
             <Slider 
                 Minimum="0"

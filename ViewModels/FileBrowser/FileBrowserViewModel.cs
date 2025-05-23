@@ -71,7 +71,7 @@ namespace ViewModels.FileBrowser
             var output = Channel.CreateUnbounded<TrackMetadata>(); // processed tracks
             int maxConcurrency = 8;
 
-            var files = Directory.EnumerateFiles(directory.FullPath);
+            var files = Directory.EnumerateFiles(directory.FullPath, "*", SearchOption.AllDirectories);
 
             // Producer: enqueue file paths
             var producer = Task.Run(async () =>

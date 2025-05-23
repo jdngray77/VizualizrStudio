@@ -10,6 +10,10 @@ namespace Visualizer
         {
             InitializeComponent();
             BindingContext = vm;
+
+            // TODO no.
+            Mix.DeckA.BindingContext = vm.PlayerA;
+            Mix.DeckB.BindingContext = vm.PlayerB;
         }
 
         protected override void OnAppearing()

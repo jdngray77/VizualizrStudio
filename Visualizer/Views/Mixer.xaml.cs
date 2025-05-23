@@ -8,6 +8,9 @@ namespace Visualizer.Views;
 
 public partial class Mixer : ContentView
 {
+    public View DeckA => deckA;
+    public View DeckB => deckB;
+
     public Mixer()
     {
         InitializeComponent();

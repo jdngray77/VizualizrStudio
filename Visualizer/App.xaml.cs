@@ -1,11 +1,19 @@
-﻿namespace Visualizer
+﻿using System.Runtime.InteropServices;
+
+#if WINDOWS
+using WinRT.Interop;
+#endif
+
+namespace Visualizer
 {
     public partial class App : Application
     {
-        public App(MainPage mainPage)
+        public App()
         {
             InitializeComponent();
-            MainPage = mainPage;
+            MainPage = new AppShell();
         }
+        
+        
     }
 }

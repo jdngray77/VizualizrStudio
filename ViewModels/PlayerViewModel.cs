@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NAudio.Wave;
+using System.Linq;
 
 namespace ViewModels
 {
@@ -20,6 +21,9 @@ namespace ViewModels
 
         // public non-observable
         public bool IsPlaying => waveOut?.PlaybackState == PlaybackState.Playing;
+
+        [ObservableProperty]
+        private float db = 0;
 
         [ObservableProperty]
         private float zoom = 10;
@@ -108,7 +112,7 @@ namespace ViewModels
                 {
                     if (waveOut.PlaybackState == PlaybackState.Paused)
                     {
-                        Thread.Sleep(30); // 60fps update rate
+                        Thread.Sleep(30);
                         continue;
                     }
 
@@ -135,6 +139,19 @@ namespace ViewModels
                     updatingProgress = true;
                     ProgressPercentage = progress;
                     updatingProgress = false;
+
+                    int index = (int)(progress * samples.Length);
+                    int length = Math.Min(samples.Length - index, 10000);
+
+                    float sum = 0;
+                    for (int i = index; i < index + length; i++)
+                    {
+                        float sample = samples[i];
+                        sum += sample * sample;
+                    }
+
+                    float rms = (float)Math.Sqrt(sum / length);
+                    Db = (rms * 2) * waveOut.Volume;
 
                     Thread.Sleep(10); // 60fps update rate
                 }
@@ -169,6 +186,11 @@ namespace ViewModels
 
         partial void OnProgressPercentageChanged(float value)
         {
+            if (audioReader == null)
+            {
+                return;
+            }
+
             SongCurrentTime = audioReader.CurrentTime;
 
             if (updatingProgress)
@@ -189,6 +211,27 @@ namespace ViewModels
             if (waveOut != null)
             {
                 waveOut.Volume = value;
+            }
+        }
+
+        public static float Median(float[] source)
+        {
+            if (source == null || source.Length == 0)
+                throw new ArgumentException("Array is empty or null.");
+
+            float[] sorted = source.OrderBy(x => x).ToArray();
+            int count = sorted.Length;
+            int mid = count / 2;
+
+            if (count % 2 == 0)
+            {
+                // Even number of elements: average the two middle ones
+                return (sorted[mid - 1] + sorted[mid]) / 2f;
+            }
+            else
+            {
+                // Odd number: return the middle one
+                return sorted[mid];
             }
         }
     }

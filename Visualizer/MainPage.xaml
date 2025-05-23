@@ -7,13 +7,39 @@
              x:Class="Visualizer.MainPage"
              BackgroundColor="Black"
              x:DataType="viewModels:MainPageViewModel">
+    
+    <ContentPage.MenuBarItems>
+        <!-- File Menu -->
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="New Project"/>
+            <MenuFlyoutItem Text="Open"/>
+            <MenuFlyoutItem Text="Save"/>
+            <MenuFlyoutItem Text="Exit"/>
+        </MenuBarItem>
+
+        <!-- Tools Menu -->
+        <MenuBarItem Text="Tools">
+            <MenuFlyoutItem Text="Settings"/>
+            <MenuFlyoutItem Text="Preferences"/>
+        </MenuBarItem>
+
+        <!-- Help Menu -->
+        <MenuBarItem Text="Help">
+            <MenuFlyoutItem Text="Documentation"/>
+            <MenuFlyoutItem Text="About"/>
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+    
 
     <Grid 
         ColumnDefinitions="*,.5*,*" 
         RowDefinitions="*,*,25">
+
+        <VerticalStackLayout x:Name="menu"/>
+        
         <views:Player Grid.Column="0" Grid.Row="0" BindingContext="{Binding PlayerA}"/>
 
-        <views:Mixer Grid.Column="1" Grid.Row="0"/>
+        <views:Mixer Grid.Column="1" Grid.Row="0" x:Name="Mix"/>
 
         <views:Player Grid.Column="2" Grid.Row="0" BindingContext="{Binding PlayerB}"/>
 
@@ -52,4 +78,5 @@
             </Label>
         </Grid>
     </Grid>
+
 </ContentPage>

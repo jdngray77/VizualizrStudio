@@ -5,7 +5,7 @@ A WIP FOSS Dj Program made with .NET MAUI and 💜
 
 ---
 
-[https://streamable.com/r4xdu8](Recording)
+[https://streamable.com/r4xdu8](https://streamable.com/r4xdu8)
 
 ---
 

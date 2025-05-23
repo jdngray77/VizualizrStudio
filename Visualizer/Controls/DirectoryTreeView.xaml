@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<CollectionView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fileBrowser="clr-namespace:ViewModels.FileBrowser;assembly=ViewModels"
+             xmlns:utility="using:Visualizer.Utility"
+             xmlns:treeView="clr-namespace:ViewModels.TreeView;assembly=ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Visualizer.Controls.DirectoryTreeView"
+             x:Name="View"
+             x:DataType="fileBrowser:DirectoryTreeViewModel"
+             ItemsSource="{Binding FlattenedTree}"
+             SelectionMode="Single"
+             BackgroundColor="#222">
+    
+    <CollectionView.Resources>
+        <utility:IntToThicknessConverter x:Key="IntToThicknessConverter"/>
+        <utility:BoolToArrowConverter x:Key="BoolToArrowConverter"/>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </CollectionView.Resources>
+    
+    <CollectionView.ItemTemplate>
+        <DataTemplate>
+            <Grid
+                Padding="5"
+                BackgroundColor="#222"
+                x:DataType="treeView:DirectoryNode"
+                ColumnDefinitions="Auto,*">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="OnGridTapped"/>
+                </Grid.GestureRecognizers>
+                
+                <!-- Arrow -->
+                <Label Grid.Column="0"
+                       Text="{Binding IsExpanded, Converter={StaticResource BoolToArrowConverter}}"
+                       TextColor="White"
+                       FontSize="10"
+                       MinimumHeightRequest="15"
+                       VerticalTextAlignment="Center"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       Padding="{Binding PaddingLeft, Converter={StaticResource IntToThicknessConverter}}"
+                       IsVisible="{Binding HasChildren}">
+                </Label>
+
+                <Label Grid.Column="0"
+                       MinimumHeightRequest="15"
+                       Padding="{Binding PaddingLeft, Converter={StaticResource IntToThicknessConverter}}"
+                       IsVisible="{Binding HasChildren, Converter={StaticResource InvertedBoolConverter}}">
+                </Label>
+
+                <!-- Folder Name -->
+                <Label Grid.Column="1"
+                       Text="{Binding Name}"
+                       TextColor="White"
+                       VerticalTextAlignment="Center"
+                       
+                       Padding="10,0,0,0"/>
+            </Grid>
+        </DataTemplate>
+    </CollectionView.ItemTemplate>
+</CollectionView>

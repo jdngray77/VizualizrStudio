@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:visualizer="using:Visualizer"
+             xmlns:views="using:Visualizer.Views"
+             xmlns:viewModels="clr-namespace:ViewModels;assembly=ViewModels"
+             x:Class="Visualizer.MainPage"
+             BackgroundColor="Black"
+             x:DataType="viewModels:MainPageViewModel">
+
+    <Grid 
+        ColumnDefinitions="*,.5*,*" 
+        RowDefinitions="*,*,25">
+        <views:Player Grid.Column="0" Grid.Row="0" BindingContext="{Binding PlayerA}"/>
+
+        <views:Mixer Grid.Column="1" Grid.Row="0"/>
+
+        <views:Player Grid.Column="2" Grid.Row="0" BindingContext="{Binding PlayerB}"/>
+
+        <views:FileBrowser Grid.Row="1" Grid.ColumnSpan="3" BindingContext="{Binding FileBrowser}"/>
+
+        <Grid Grid.ColumnSpan="3"
+              Grid.Row="2"
+              BackgroundColor="Black"
+              Padding="3"
+              
+              ColumnDefinitions="Auto,*,Auto">
+
+            <Label Grid.Column="0" FontSize="13" Text="{Binding StatusMajor}">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="{x:Type Label}" Binding="{Binding HighlightMajor}" Value="True">
+                                <Setter Property="Background" Value="Red" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+
+
+            <Label Grid.Column="2" FontSize="13" Text="{Binding StatusMinor}">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="{x:Type Label}" Binding="{Binding HighlightMajor}" Value="True">
+                                <Setter Property="Background" Value="Red" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+        </Grid>
+    </Grid>
+</ContentPage>

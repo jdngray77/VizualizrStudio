@@ -1,0 +1,72 @@
+﻿<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="using:Visualizer.Controls"
+    xmlns:fileBrowser="clr-namespace:ViewModels.FileBrowser;assembly=ViewModels"
+    xmlns:viewModels="clr-namespace:ViewModels;assembly=ViewModels"
+    x:Class="Visualizer.Views.FileBrowser"
+    x:DataType="fileBrowser:FileBrowserViewModel"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    BackgroundColor="#121212">
+
+    <ContentView.Resources>
+        <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
+    </ContentView.Resources>
+
+    <Grid ColumnDefinitions="0.15*,0.9*">
+        <!-- Directory Tree -->
+       <controls:DirectoryTreeView BindingContext="{Binding DirectoryViewModel}"/>
+
+        <!-- Track List -->
+        <CollectionView Grid.Column="1"
+                        ItemsSource="{Binding Tracks}"
+                        BackgroundColor="Black"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedTrack}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10" ColumnSpacing="20" x:DataType="viewModels:TrackViewModel">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding }"/> 
+                        </Grid.GestureRecognizers>
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <!-- Info Left -->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- Info Right -->
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left Info -->
+                        <StackLayout Orientation="Horizontal" Grid.Column="0" Spacing="10">
+                            <Image Source="{Binding Metadata.AlbumArt, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                                   WidthRequest="70" HeightRequest="70" />
+                            <StackLayout>
+                                <Label Text="{Binding Metadata.Name}"
+                                       FontAttributes="Bold"
+                                       TextColor="White" />
+                                <Label Text="{Binding Metadata.Artist}"
+                                       FontSize="12"
+                                       TextColor="Gray" />
+                                <Label Text="{Binding Metadata.Album}"
+                                       FontSize="12"
+                                       TextColor="Gray" />
+                            </StackLayout>
+                        </StackLayout>
+
+                        <!-- Right Info -->
+                        <StackLayout Grid.Column="1"
+                                     HorizontalOptions="End"
+                                     VerticalOptions="Center"
+                                     Spacing="4">
+                            <Label Text="{Binding Metadata.Key}" TextColor="LightGreen" FontSize="12"/>
+                            <Label Text="{Binding Metadata.BPM}" TextColor="LightBlue" FontSize="12"/>
+                            <Label Text="{Binding Metadata.Length}" TextColor="White" FontSize="12"/>
+                        </StackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentView>

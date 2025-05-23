@@ -1,0 +1,97 @@
+﻿<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Visualizer.Views.Mixer"
+    BackgroundColor="#121212"
+    Padding="16">
+
+    <VerticalStackLayout Spacing="16">
+
+        <Label Text="Mixer"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalOptions="Center" />
+
+        <ScrollView HorizontalScrollBarVisibility="Never"
+                    HeightRequest="400">
+
+            <HorizontalStackLayout Spacing="12">
+
+                <!-- Repeat this Channel layout for each mixer channel -->
+                <Frame WidthRequest="100"
+                       BackgroundColor="#222222"
+                       CornerRadius="8"
+                       Padding="12"
+                       HasShadow="False">
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <!-- Channel name -->
+                        <Label Text="Channel 1"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center" />
+
+                        <!-- VU Meter Placeholder -->
+                        <BoxView HeightRequest="60"
+                                 WidthRequest="30"
+                                 Color="#555555"
+                                 HorizontalOptions="Center" />
+
+                        <!-- Volume Slider -->
+                        <Label Text="Volume" TextColor="#CCCCCC" />
+                        <Slider Minimum="0" Maximum="1" Value="0.5"
+                                ThumbColor="#FF4081"
+                                MinimumTrackColor="#FF4081"
+                                MaximumTrackColor="#555555" />
+
+                        <!-- Pan Slider -->
+                        <Label Text="Pan" TextColor="#CCCCCC" />
+                        <Slider Minimum="-1" Maximum="1" Value="0"
+                                ThumbColor="#FF4081"
+                                MinimumTrackColor="#FF4081"
+                                MaximumTrackColor="#555555" />
+
+                        <!-- Mute Button -->
+                        <Button Text="Mute"
+                                BackgroundColor="#FF4081"
+                                TextColor="White"
+                                CornerRadius="6"
+                                HeightRequest="32"
+                                HorizontalOptions="Fill" />
+
+                    </VerticalStackLayout>
+
+                </Frame>
+
+                <!-- Copy the above Frame for more channels -->
+                <Frame WidthRequest="100" BackgroundColor="#222222" CornerRadius="8" Padding="12" HasShadow="False">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Channel 2" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                        <BoxView HeightRequest="60" WidthRequest="30" Color="#555555" HorizontalOptions="Center" />
+                        <Label Text="Volume" TextColor="#CCCCCC" />
+                        <Slider Minimum="0" Maximum="1" Value="0.5" ThumbColor="#FF4081" MinimumTrackColor="#FF4081" MaximumTrackColor="#555555" />
+                        <Label Text="Pan" TextColor="#CCCCCC" />
+                        <Slider Minimum="-1" Maximum="1" Value="0" ThumbColor="#FF4081" MinimumTrackColor="#FF4081" MaximumTrackColor="#555555" />
+                        <Button Text="Mute" BackgroundColor="#FF4081" TextColor="White" CornerRadius="6" HeightRequest="32" HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame WidthRequest="100" BackgroundColor="#222222" CornerRadius="8" Padding="12" HasShadow="False">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Channel 3" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                        <BoxView HeightRequest="60" WidthRequest="30" Color="#555555" HorizontalOptions="Center" />
+                        <Label Text="Volume" TextColor="#CCCCCC" />
+                        <Slider Minimum="0" Maximum="1" Value="0.5" ThumbColor="#FF4081" MinimumTrackColor="#FF4081" MaximumTrackColor="#555555" />
+                        <Label Text="Pan" TextColor="#CCCCCC" />
+                        <Slider Minimum="-1" Maximum="1" Value="0" ThumbColor="#FF4081" MinimumTrackColor="#FF4081" MaximumTrackColor="#555555" />
+                        <Button Text="Mute" BackgroundColor="#FF4081" TextColor="White" CornerRadius="6" HeightRequest="32" HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </HorizontalStackLayout>
+        </ScrollView>
+
+    </VerticalStackLayout>
+</ContentView>

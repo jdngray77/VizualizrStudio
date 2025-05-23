@@ -1,7 +1,7 @@
 # VizualizrStudio
 A WIP FOSS Dj Program made with .NET MAUI and 💜
 
-![image](https://github.com/user-attachments/assets/ca84d3b2-6946-4471-8740-51be4ab325ce)
+![Screenshot 2025-05-23 234047](https://github.com/user-attachments/assets/95b53c89-acac-4e30-87b1-0b04e009407c)
 
 ---
 

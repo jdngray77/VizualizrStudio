@@ -7,8 +7,10 @@ using Microsoft.Maui.Platform;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Services;
+using Services.Audio;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Syncfusion.Maui.Core.Hosting;
+using TagLib.Mpeg;
 using ViewModels;
 using ViewModels.FileBrowser;
 using Visualizer.WinUI;
@@ -72,6 +74,8 @@ public static class MauiProgram
     {
         builderServices.AddSingleton<TrackManager>();
         builderServices.AddSingleton<StatusService>();
+        builderServices.AddSingleton<AudioHypervisor>();
+        builderServices.AddSingleton<StartupService>();
         builderServices.AddSingleton<IMessenger, WeakReferenceMessenger>();
     }
     

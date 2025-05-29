@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Services;
 using Services.Messages;
 using ViewModels;
 
@@ -6,8 +7,12 @@ namespace Visualizer
 {
     public partial class MainPage
     {
-        public MainPage(MainPageViewModel vm)
+        private readonly StartupService startupService;
+        
+        public MainPage(MainPageViewModel vm, StartupService startupService)
         {
+            this.startupService = startupService;
+            
             InitializeComponent();
             BindingContext = vm;
 
@@ -20,6 +25,7 @@ namespace Visualizer
         {
             base.OnAppearing();
             Application.Current.Handler.MauiContext.Services.GetRequiredService<IMessenger>().Send<ShouldInitializeStatus>();
+            startupService.InitializeAsync();
         }
     }
 }

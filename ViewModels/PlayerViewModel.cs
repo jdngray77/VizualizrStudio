@@ -2,15 +2,22 @@
 using CommunityToolkit.Mvvm.Input;
 using NAudio.Wave;
 using System.Linq;
+using Services.Audio;
 
 namespace ViewModels
 {
     [ObservableObject]
-    public partial class PlayerViewModel
+    public partial class PlayerViewModel : IDisposable
     {
         // Audio playback
-        private AudioFileReader audioReader;
-        private WaveOutEvent waveOut;
+        private AudioRenderer? renderer = null;
+
+        private readonly AudioHypervisor audioHypervisor;
+
+        public PlayerViewModel(AudioHypervisor audioHypervisor)
+        {
+            this.audioHypervisor = audioHypervisor;
+        }
 
         // Private state
         private volatile bool updatingProgress = false;
@@ -18,10 +25,10 @@ namespace ViewModels
         // Visualizer time lerping
         TimeSpan lastKnownTime = TimeSpan.Zero;
         DateTime lastUpdateTime = DateTime.Now;
-
+        
         // public non-observable
-        public bool IsPlaying => waveOut?.PlaybackState == PlaybackState.Playing;
-
+        public bool IsPlaying => renderer?.IsPlaying == true;
+        
         [ObservableProperty]
         private float db = 0;
 
@@ -49,6 +56,16 @@ namespace ViewModels
         [RelayCommand]
         public async Task Load(TrackMetadata metadata)
         {
+            if (renderer == null)
+            {
+                renderer = audioHypervisor.CreateAudioRenderer();
+            }
+
+            if (renderer.IsLoaded)
+            {
+                renderer.Unload();
+            }
+
             string path = metadata.FilePath;
 
             if (!File.Exists(path))
@@ -61,34 +78,24 @@ namespace ViewModels
             await Task.Run(async () =>
             {
                 // Dump existing data
-                if (audioReader != null)
-                {
-                    waveOut.Stop();
-                    waveOut.Dispose();
-                    waveOut = null;
-
-                    await audioReader.DisposeAsync().ConfigureAwait(false);
-                    audioReader = null;
-                    GC.Collect();
-                }
-
+                renderer.Unload();
                 ProgressPercentage = 0f;
 
                 // Create file stream
-                audioReader = new AudioFileReader(path);
+                // TODO this must be replaced as it's dependant on NAudio, which is windows-only.
+                await using var audioReader = new AudioFileReader(path);
 
-                // Load samples
-                var buffer = new float[audioReader.Length / sizeof(float)];
-                int read = audioReader.Read(buffer, 0, buffer.Length);
+                var sampleReader = audioReader.ToStereo();
+                // Load samples from disk
+                var buffer = new float[(audioReader.Length * 2) / sizeof(float)];
+                int read = sampleReader.Read(buffer, 0, buffer.Length);
                 Samples = buffer.Take(read).ToArray();
 
-                audioReader.Dispose();
-                audioReader = new AudioFileReader(path);
-
-                // Create basic audio player
-                waveOut = new WaveOutEvent();
-                waveOut.Init(audioReader);
-
+                // Load into renderer
+                renderer.LoadSamples(
+                    sampleRate: audioReader.WaveFormat.SampleRate,
+                    samples: Samples);
+                
                 SongTotalTime = audioReader.TotalTime;
             }).ConfigureAwait(false);
         }
@@ -96,27 +103,22 @@ namespace ViewModels
         [RelayCommand]
         public void Play()
         {
-            if (waveOut == null)
+            if (renderer == null || !renderer.IsLoaded)
             {
                 return;
             }
 
-            waveOut.Play();
+            renderer.StartPlayback();
             
             Thread t = new Thread(() =>
             {
                 lastKnownTime = TimeSpan.Zero;
                 lastUpdateTime = DateTime.Now;
 
-                while (waveOut != null && waveOut.PlaybackState != PlaybackState.Stopped)
+                while (renderer?.IsPlaying == true) // TODO this will kill the thread.
                 {
-                    if (waveOut.PlaybackState == PlaybackState.Paused)
-                    {
-                        Thread.Sleep(30);
-                        continue;
-                    }
-
-                    var newKnownTime = audioReader.CurrentTime;
+                    // TODO timecode caching does not handle stream wrapping.
+                    var newKnownTime = TimeSpan.FromSeconds(renderer.PlaybackTime); // TODO dubious.
                     var now = DateTime.Now;
     
                     if (newKnownTime > lastKnownTime)
@@ -130,14 +132,14 @@ namespace ViewModels
                     TimeSpan interpolatedTime = lastKnownTime + (now - lastUpdateTime);
     
                     // Clamp so it does not go beyond TotalTime
-                    if (interpolatedTime > audioReader.TotalTime)
-                        interpolatedTime = audioReader.TotalTime;
+                    if (interpolatedTime > SongTotalTime)
+                        interpolatedTime = SongTotalTime;
     
                     // Calculate progress
-                    float progress = (float)(interpolatedTime.TotalSeconds / audioReader.TotalTime.TotalSeconds);
+                    double progress = renderer.PlaybackPercentage;
 
                     updatingProgress = true;
-                    ProgressPercentage = progress;
+                    ProgressPercentage = (float)progress;
                     updatingProgress = false;
 
                     int index = (int)(progress * samples.Length);
@@ -151,8 +153,7 @@ namespace ViewModels
                     }
 
                     float rms = (float)Math.Sqrt(sum / length);
-                    Db = (rms * 2) * waveOut.Volume;
-
+                    Db = (rms * 2); // TODO * renderer.Volume;
                     Thread.Sleep(10); // 60fps update rate
                 }
             });
@@ -163,76 +164,66 @@ namespace ViewModels
         [RelayCommand]
         public void Stop()
         {
-            waveOut.Stop();
+            renderer?.StopPlayback();
         }
 
         [RelayCommand]
         private void UserStartedManualSeek()
         {
-            if (waveOut != null && waveOut.PlaybackState == PlaybackState.Playing)
-            {
-                waveOut.Pause();
-            }
+            // TODO realistically, we don't want to do this. Keep the stream open and manipulate the
+            //      samples.
+            //if (renderer?.IsPlaying == true)
+            //{
+            //    renderer.StopPlayback();
+            //}
         }
 
         [RelayCommand]
         private void UserStoppedManualSeek()
         {
-            if (waveOut != null && waveOut.PlaybackState == PlaybackState.Paused)
-            {
-                waveOut.Play();
-            }
+            // TODO only resume if was previously playing.
+            //if (renderer?.IsPlaying == true)
+            //{
+            //    renderer.StartPlayback();
+            //}
         }
 
         partial void OnProgressPercentageChanged(float value)
         {
-            if (audioReader == null)
+            if (renderer == null)
             {
                 return;
             }
 
-            SongCurrentTime = audioReader.CurrentTime;
+            SongCurrentTime = TimeSpan.FromSeconds(renderer.PlaybackTime);
 
             if (updatingProgress)
             {
                 return;
             }
 
-            if (waveOut != null && audioReader != null)
+            if (renderer != null)
             {
-                var newPos = value * audioReader.TotalTime.TotalSeconds;
-                audioReader.CurrentTime = TimeSpan.FromSeconds(newPos);
+                var newPos = value * SongTotalTime.TotalSeconds;
+                // TODO manipulate playback time.
+                // renderer.PlaybackTime = TimeSpan.FromSeconds(newPos);
+                renderer.PlaybackPercentage = newPos;
                 lastKnownTime = TimeSpan.Zero;
             }
         }
 
         partial void OnVolumeChanged(float value)
         {
-            if (waveOut != null)
+            if (renderer != null)
             {
-                waveOut.Volume = value;
+                // TODO renderer volume.
+                //renderer.Volume = value;
             }
         }
 
-        public static float Median(float[] source)
+        public void Dispose()
         {
-            if (source == null || source.Length == 0)
-                throw new ArgumentException("Array is empty or null.");
-
-            float[] sorted = source.OrderBy(x => x).ToArray();
-            int count = sorted.Length;
-            int mid = count / 2;
-
-            if (count % 2 == 0)
-            {
-                // Even number of elements: average the two middle ones
-                return (sorted[mid - 1] + sorted[mid]) / 2f;
-            }
-            else
-            {
-                // Odd number: return the middle one
-                return sorted[mid];
-            }
+            renderer?.Dispose();
         }
     }
 }

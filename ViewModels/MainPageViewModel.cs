@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Services;
+using Services.Audio;
 using Services.Messages;
 using Services.Utility;
 using ViewModels.FileBrowser;
@@ -11,17 +12,23 @@ namespace ViewModels
     public partial class MainPageViewModel
     {
         private StatusService statusService;
+        private readonly AudioHypervisor AudioHypervisor;
 
         public MainPageViewModel(
             FileBrowserViewModel fileBrowserViewModel, 
             IMessenger messenger,
-            StatusService statusService)
+            StatusService statusService,
+            AudioHypervisor audioHypervisor)
         {
             fileBrowser = fileBrowserViewModel;
             this.statusService = statusService;
+            this.AudioHypervisor = audioHypervisor;
 
             messenger.Register<StatusMessage>(this, StatusMessageReceived);
             messenger.Register<TrackSelectedMessage>(this, SongSelected);
+
+            this.PlayerA = new PlayerViewModel(audioHypervisor);
+            this.PlayerB = new PlayerViewModel(audioHypervisor);
         }
 
         private async void SongSelected(object recipient, TrackSelectedMessage message)
@@ -40,12 +47,12 @@ namespace ViewModels
         }
 
         [ObservableProperty] 
-        private PlayerViewModel playerA = new PlayerViewModel();
+        private PlayerViewModel playerA;
 
         // TODO mixer
-        
-        [ObservableProperty] 
-        private PlayerViewModel playerB = new PlayerViewModel();
+
+        [ObservableProperty]
+        private PlayerViewModel playerB;
 
         [ObservableProperty]
         private FileBrowserViewModel fileBrowser;

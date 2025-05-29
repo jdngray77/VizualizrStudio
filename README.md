@@ -18,7 +18,9 @@ Major backlog items include:
 --- 
 # Libraries in use
 NAudio       -  loading audio samples and determining sample rates - Will be removed as it's windows only.
+
 PortAudio    -  Audio renderer.
+
 SyncFusion   -  Controls
 
 

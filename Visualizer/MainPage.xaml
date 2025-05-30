@@ -7,7 +7,7 @@
              x:Class="Visualizer.MainPage"
              BackgroundColor="Black"
              x:DataType="viewModels:MainPageViewModel">
-    
+
     <ContentPage.MenuBarItems>
         <!-- File Menu -->
         <MenuBarItem Text="File">
@@ -29,24 +29,85 @@
             <MenuFlyoutItem Text="About"/>
         </MenuBarItem>
     </ContentPage.MenuBarItems>
-    
+
+
 
     <Grid 
         ColumnDefinitions="*,.5*,*" 
-        RowDefinitions="*,*,25">
+        RowDefinitions="Auto,*,*,25">
 
-        <VerticalStackLayout x:Name="menu"/>
+        <Grid MinimumHeightRequest="50"
+              MaximumHeightRequest="50"
+              Grid.Row="0"
+              Grid.ColumnSpan="3"
+              ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto,Auto"
+              BindingContext="{Binding TitleBar}"
+              x:DataType="viewModels:TitleBarViewModel">
+
+            <Label 
+                Grid.Column="0" 
+                Text="Vizualizr"
+                FontSize="20"
+                VerticalTextAlignment="Center"
+                Padding="10"/>
+
+            <Label 
+                Grid.Column="1" 
+                Text="DEBUGGER CONNECTED"
+                FontSize="12"
+                TextDecorations="Underline"
+                BackgroundColor="Red"
+                VerticalTextAlignment="Center"
+                Padding="10"
+                IsVisible="{Binding IsDebuggerConnected, Mode=OneWay}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DebuggerBreakCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+            <Label 
+                Grid.Column="3" 
+                Text="100%"
+                FontSize="15"
+                VerticalTextAlignment="Center"
+                Padding="10"/>
+
+            <Label 
+                Grid.Column="4" 
+                Text="00:00 PM"
+                FontSize="15"
+                VerticalTextAlignment="Center"
+                Padding="15"/>
+
+            <Button 
+                CornerRadius="0"
+                Grid.Column="5"
+                Text="Min"
+                Command="{Binding MinimiseCommand}"/>
+
+            <Button 
+                CornerRadius="0"
+                Grid.Column="6"
+                Text="F/S"
+                Command="{Binding ToggleFullscreenCommand}"/>
+            
+            <Button 
+                CornerRadius="0"
+                Grid.Column="7"
+                Text="Exit"
+                Command="{Binding QuitCommand}"/>
+        </Grid>
         
-        <views:Player Grid.Column="0" Grid.Row="0" BindingContext="{Binding PlayerA}"/>
+        <views:Player Grid.Column="0" Grid.Row="1" BindingContext="{Binding PlayerA}"/>
 
-        <views:Mixer Grid.Column="1" Grid.Row="0" x:Name="Mix"/>
+        <views:Mixer Grid.Column="1" Grid.Row="1" x:Name="Mix"/>
 
-        <views:Player Grid.Column="2" Grid.Row="0" BindingContext="{Binding PlayerB}"/>
+        <views:Player Grid.Column="2" Grid.Row="1" BindingContext="{Binding PlayerB}"/>
 
-        <views:FileBrowser Grid.Row="1" Grid.ColumnSpan="3" BindingContext="{Binding FileBrowser}"/>
+        <views:FileBrowser Grid.Row="2" Grid.ColumnSpan="3" BindingContext="{Binding FileBrowser}"/>
 
         <Grid Grid.ColumnSpan="3"
-              Grid.Row="2"
+              Grid.Row="3"
               BackgroundColor="Black"
               Padding="3"
               

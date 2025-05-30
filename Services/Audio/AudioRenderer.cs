@@ -45,6 +45,8 @@ namespace Services.Audio
             }
         }
 
+        public float Gain { get; set; } = 1f;
+
         public bool IsPlaying => hasAudioData && audioStream != null && audioStream.IsActive;
 
         public bool IsLoaded => hasAudioData && audioStream != null;
@@ -171,6 +173,9 @@ namespace Services.Audio
 
                 // Linear interpolation between samples
                 float sample = (1 - frac) * samples[posInt] + frac * samples[nextPos];
+
+                // Apply gain
+                sample = sample * Gain;
 
                 // Apply simple lowpass effect
                 // float filteredSample = 0.5f * sample + 0.5f * lastFilteredSample;

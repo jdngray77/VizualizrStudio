@@ -15,7 +15,8 @@ namespace ViewModels
         private readonly AudioHypervisor AudioHypervisor;
 
         public MainPageViewModel(
-            FileBrowserViewModel fileBrowserViewModel, 
+            FileBrowserViewModel fileBrowserViewModel,
+            TitleBarViewModel titleBarViewModel,
             IMessenger messenger,
             StatusService statusService,
             AudioHypervisor audioHypervisor)
@@ -27,6 +28,7 @@ namespace ViewModels
             messenger.Register<StatusMessage>(this, StatusMessageReceived);
             messenger.Register<TrackSelectedMessage>(this, SongSelected);
 
+            this.TitleBar = titleBarViewModel;
             this.PlayerA = new PlayerViewModel(audioHypervisor);
             this.PlayerB = new PlayerViewModel(audioHypervisor);
         }
@@ -45,6 +47,9 @@ namespace ViewModels
                 statusService.SetStatus(Minor: $"Deck B loaded '{message.Value.Name}'");
             }
         }
+
+        [ObservableProperty]
+        private TitleBarViewModel titleBar;
 
         [ObservableProperty] 
         private PlayerViewModel playerA;

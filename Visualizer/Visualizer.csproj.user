@@ -7,5 +7,8 @@
     <MauiXaml Update="Views\FileBrowser.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Views\ModalAlert.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
   </ItemGroup>
 </Project>

@@ -33,7 +33,7 @@ namespace ViewModels
         private float db = 0;
 
         [ObservableProperty]
-        private float zoom = 10;
+        private float zoom = 0;
 
         [ObservableProperty]
         private float volume = .5f;
@@ -153,7 +153,7 @@ namespace ViewModels
                     }
 
                     float rms = (float)Math.Sqrt(sum / length);
-                    Db = (rms * 2); // TODO * renderer.Volume;
+                    Db = (rms * 2) * volume;
                     Thread.Sleep(10); // 60fps update rate
                 }
             });
@@ -218,6 +218,7 @@ namespace ViewModels
             {
                 // TODO renderer volume.
                 //renderer.Volume = value;
+                renderer.Gain = value;
             }
         }
 

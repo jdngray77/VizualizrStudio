@@ -6,6 +6,7 @@ using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.Platform;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
+using ServiceInterfaces;
 using Services;
 using Services.Audio;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -13,6 +14,7 @@ using Syncfusion.Maui.Core.Hosting;
 using TagLib.Mpeg;
 using ViewModels;
 using ViewModels.FileBrowser;
+using Visualizer.MauiServices;
 using Visualizer.WinUI;
 
 namespace Visualizer;
@@ -76,6 +78,7 @@ public static class MauiProgram
         builderServices.AddSingleton<StatusService>();
         builderServices.AddSingleton<AudioHypervisor>();
         builderServices.AddSingleton<StartupService>();
+        builderServices.AddSingleton<IAlertService, MauiAlertService>();
         builderServices.AddSingleton<IMessenger, WeakReferenceMessenger>();
     }
     
@@ -83,7 +86,7 @@ public static class MauiProgram
     {
         builderServices.AddSingleton<FileBrowserViewModel>();
         builderServices.AddSingleton<MainPageViewModel>();
-
+        builderServices.AddSingleton<TitleBarViewModel>();
         builderServices.AddTransient<TrackViewModel>();
     }
 

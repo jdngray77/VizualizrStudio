@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<gauges:SfRadialGauge xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:gauges="http://schemas.syncfusion.com/maui"         
+             x:Class="Vizualizr.Controls.Knob">
+
+    <gauges:SfRadialGauge.Axes>
+        <gauges:RadialAxis ShowTicks="True"
+              ShowLabels="False"
+              Minimum="0"
+              Maximum="1">
+
+            <gauges:RadialAxis.AxisLineStyle>
+                <gauges:RadialLineStyle Thickness="0"/>
+            </gauges:RadialAxis.AxisLineStyle>
+
+            <gauges:RadialAxis.Pointers>
+                <gauges:RangePointer Value="{Binding Source={x:Reference markerPointer}, Path=Value}"
+                          CornerStyle="BothCurve"
+                          Fill="{StaticResource Secondary}"
+                          PointerWidth="2"/>
+
+                <gauges:ShapePointer ShapeType="Circle"
+                            HasShadow="True"
+                            Value="30"
+                            IsInteractive="True"
+                            ShapeHeight="10"
+                            ShapeWidth="10"
+                            Fill="{StaticResource Primary}"/>
+            </gauges:RadialAxis.Pointers>
+        </gauges:RadialAxis>
+    </gauges:SfRadialGauge.Axes>
+
+</gauges:SfRadialGauge>

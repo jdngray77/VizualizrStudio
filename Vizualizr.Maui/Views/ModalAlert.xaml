@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="Vizualizr.Views.ModalAlert"
+    BackgroundColor="#AA121212"
+    Padding="5">
+
+    <Grid
+        VerticalOptions="CenterAndExpand"
+        HorizontalOptions="CenterAndExpand">
+        <Frame HasShadow="True">
+            <Grid Padding="20"
+                  MinimumWidthRequest="500"
+                  MinimumHeightRequest="200"
+                  RowDefinitions="Auto, Auto, 100, Auto">
+
+                <Label x:Name="TitleLabel"
+                       Grid.Row="0"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" />
+
+                <Label x:Name="MessageLabel"
+                       Grid.Row="1"
+                       FontSize="16"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       Margin="10" />
+
+                <HorizontalStackLayout Grid.Row="2"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="End"
+                                       Spacing="20">
+                    <Button x:Name="YesButton" Text="OK" Clicked="OnYesClicked" />
+                    <Button x:Name="NoButton" Text="Cancel" Clicked="OnNoClicked" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Frame>
+    </Grid>
+</ContentPage>

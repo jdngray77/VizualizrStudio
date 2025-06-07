@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:tabView="clr-namespace:MPowerKit.TabView;assembly=MPowerKit.TabView"
+    xmlns:viewModels="clr-namespace:ViewModels;assembly=Vizualizr.ViewModels"
+    xmlns:waveform="using:Vizualizr.Controls.Waveform"
+    xmlns:utility="clr-namespace:Vizualizr.Utility"
+    x:Class="Vizualizr.Views.Player"
+    xmlns:behaviors="clr-namespace:Microsoft.Maui.Controls;assembly=Microsoft.Maui.Controls"
+    BackgroundColor="Black"
+    Padding="5"
+    x:DataType="viewModels:PlayerViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
+            <utility:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <VerticalStackLayout Spacing="12">
+
+        <!-- Song Information -->
+        <Grid ColumnDefinitions="Auto, *, Auto, Auto" VerticalOptions="Start" HeightRequest="100">
+            <!-- Album Art -->
+            <Frame WidthRequest="100" HeightRequest="100" CornerRadius="8" BackgroundColor="#222222" HasShadow="False" Padding="0">
+                <Image Source="{Binding Metadata.AlbumArt, Converter={StaticResource ByteArrayToImageSourceConverter}}" Aspect="AspectFill" />
+            </Frame>
+
+            <!-- Song Details -->
+            <VerticalStackLayout Grid.Column="1" Padding="12,0" VerticalOptions="Center">
+                <Label Text="{Binding Metadata.Name, Mode=OneWay}" FontAttributes="Bold" FontSize="22" TextColor="White" LineBreakMode="TailTruncation" />
+                <Label Text="{Binding Metadata.Artist, Mode=OneWay}" FontSize="16" TextColor="#BBBBBB" LineBreakMode="TailTruncation" />
+                <Label Text="{Binding Metadata.Album, Mode=OneWay}" FontSize="14" TextColor="#666666" LineBreakMode="TailTruncation" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Margin="10,0" Grid.Column="2" VerticalOptions="Center">
+                <Label Text="{Binding SongCurrentTime, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" FontSize="16" TextColor="#BBBBBB"/>
+                <Label Text="{Binding SongTotalTime, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" FontSize="14" TextColor="#666666" />
+                <Label Text="{Binding Bpm, Mode=OneWay, StringFormat='{}{0:F0} BPM'}" FontSize="14" TextColor="#666666" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Waveform Display -->
+        <Frame CornerRadius="8" BackgroundColor="Black" HasShadow="True" Padding="1,0">
+            <GraphicsView 
+                x:Name="WaveformGraphicsView"
+                MinimumHeightRequest="150"
+                MinimumWidthRequest="300"
+                HorizontalOptions="Fill">
+                <GraphicsView.Drawable>
+                    <waveform:DrawableWaveform x:Name="WaveformDrawable"/>
+                </GraphicsView.Drawable>
+            </GraphicsView>
+        </Frame>
+
+        <Grid ColumnDefinitions="Auto, Auto, Auto, *, Auto">
+
+            <Button 
+                Margin="10,0,0,0"
+                Grid.Column="0" 
+                Text="Cue" 
+                Command="{Binding CueCommand}"/>
+
+            <Button 
+                Margin="10,0,0,0"
+                Grid.Column="1" 
+                Text="Play" 
+                Command="{Binding PlayCommand}"/>
+            
+            <Button
+                Margin="10,0"
+                Grid.Column="2" 
+                Text="Stop" 
+                Command="{Binding StopCommand}"/>
+            
+            <Slider 
+                Minimum="0"
+                Maximum="50"
+                Value="{Binding Zoom}"
+                Grid.Column="4"
+                WidthRequest="100"
+                VerticalOptions="Center"
+                ToolTipProperties.Text="Zoom"/>
+        </Grid>
+
+        <!-- Overall Progress Slider -->
+        <Slider Minimum="0" Maximum="1"
+                Value="{Binding ProgressPercentage}"
+                HorizontalOptions="FillAndExpand"
+                ThumbColor="#FF4081"
+                MinimumTrackColor="#FF4081"
+                MaximumTrackColor="#555555"
+                HeightRequest="30">
+            <Slider.Behaviors>
+                <toolkit:EventToCommandBehavior
+                    EventName="DragStarted"
+                    Command="{Binding UserStartedManualSeekCommand}" />
+                <toolkit:EventToCommandBehavior
+                    EventName="DragCompleted"
+                    Command="{Binding UserStoppedManualSeekCommand}" />
+            </Slider.Behaviors>
+        </Slider>
+
+    </VerticalStackLayout>
+</ContentView>

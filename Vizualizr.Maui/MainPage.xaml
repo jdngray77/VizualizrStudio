@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Vizualizr="using:Vizualizr"
+             xmlns:views="using:Vizualizr.Views"
+             xmlns:viewModels="clr-namespace:ViewModels;assembly=Vizualizr.ViewModels"
+             xmlns:gauges="http://schemas.syncfusion.com/maui"
+             x:Class="Vizualizr.MainPage"
+             x:DataType="viewModels:MainPageViewModel">
+
+    <ContentPage.MenuBarItems>
+        <!-- File Menu -->
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="New Project"/>
+            <MenuFlyoutItem Text="Open"/>
+            <MenuFlyoutItem Text="Save"/>
+            <MenuFlyoutItem Text="Exit"/>
+        </MenuBarItem>
+
+        <!-- Tools Menu -->
+        <MenuBarItem Text="Tools">
+            <MenuFlyoutItem Text="Settings"/>
+            <MenuFlyoutItem Text="Preferences"/>
+        </MenuBarItem>
+
+        <!-- Help Menu -->
+        <MenuBarItem Text="Help">
+            <MenuFlyoutItem Text="Documentation"/>
+            <MenuFlyoutItem Text="About"/>
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+
+
+
+    <Grid 
+        ColumnDefinitions="*,.5*,*" 
+        RowDefinitions="Auto,*,*,25"
+        BackgroundColor="Black">
+
+        <Grid MaximumHeightRequest="30"
+              
+              Grid.Row="0"
+              Grid.ColumnSpan="3"
+              ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto,Auto"
+              BindingContext="{Binding TitleBar}"
+              x:DataType="viewModels:TitleBarViewModel">
+
+            <Label 
+                Grid.Column="0" 
+                Text="Vizualizr"
+                FontSize="20"
+                VerticalTextAlignment="Center"
+                Padding="10"/>
+
+            <Label 
+                Grid.Column="1" 
+                Text="DEBUGGER CONNECTED"
+                FontSize="12"
+                TextDecorations="Underline"
+                BackgroundColor="Red"
+                VerticalTextAlignment="Center"
+                Padding="10"
+                IsVisible="{Binding IsDebuggerConnected, Mode=OneWay}"
+                ToolTipProperties.Text="Click to break.">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DebuggerBreakCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+            <Label 
+                Grid.Column="3" 
+                Text="{Binding BatteryPercent}"
+                IsVisible="{Binding OnBatteryPower}"
+                FontSize="15"
+                VerticalTextAlignment="Center"
+                Padding="10"/>
+
+            <Label 
+                Grid.Column="4" 
+                Text="{Binding CurrentTime, StringFormat='{}{0:hh:mm tt}'}"
+                FontSize="15"
+                VerticalTextAlignment="Center"
+                Padding="15"/>
+
+            <Button 
+                MaximumHeightRequest="30"
+                MinimumHeightRequest="30"
+                BorderWidth="1"
+                Padding="0"
+                Margin="0"
+                CornerRadius="0"
+                Grid.Column="5"
+                Text="Min"
+                Command="{Binding MinimiseCommand}"/>
+
+            <Button MaximumHeightRequest="30"
+                MinimumHeightRequest="30"
+                BorderWidth="1"
+                Padding="0"
+                Margin="0"
+                CornerRadius="0"
+                Grid.Column="6"
+                Text="F/S"
+                Command="{Binding ToggleFullscreenCommand}"/>
+            
+            <Button MaximumHeightRequest="30"
+                MinimumHeightRequest="30"
+                BorderWidth="1"
+                Padding="0"
+                Margin="0"
+                CornerRadius="0"
+                Grid.Column="7"
+                Text="Exit"
+                Command="{Binding QuitCommand}"/>
+        </Grid>
+        
+        <views:Player Grid.Column="0" Grid.Row="1" BindingContext="{Binding PlayerA}"/>
+
+        <views:Mixer Grid.Column="1" Grid.Row="1" x:Name="Mix"/>
+
+        <views:Player Grid.Column="2" Grid.Row="1" BindingContext="{Binding PlayerB}"/>
+
+        <views:FileBrowser Grid.Row="2" Grid.ColumnSpan="3" BindingContext="{Binding FileBrowser}"/>
+
+        <Grid Grid.ColumnSpan="3"
+              Grid.Row="3"
+              BackgroundColor="Black"
+              Padding="3"
+              
+              ColumnDefinitions="Auto,*,Auto,Auto,*,Auto">
+
+            <Label Grid.Column="0" FontSize="13" Text="{Binding StatusMajor}">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="{x:Type Label}" Binding="{Binding HighlightMajor}" Value="True">
+                                <Setter Property="Background" Value="Red" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+
+            <gauges:SfLinearGauge
+                  Grid.Column="2"
+                  Orientation="Horizontal"
+                  Minimum="0"
+                  Maximum="100"
+                  WidthRequest="100"
+                  HeightRequest="25"
+                  ShowTicks="False"
+                  ShowLabels="False"
+                  HorizontalOptions="Center"
+                  BackgroundColor="Gray"
+                  Margin="20,0"
+                  LabelPosition="Inside">
+                <gauges:SfLinearGauge.LineStyle>
+                    <gauges:LinearLineStyle 
+                        Thickness="40"
+                        Fill="#222"/>
+
+                </gauges:SfLinearGauge.LineStyle>
+                <gauges:SfLinearGauge.BarPointers>
+                    <gauges:BarPointer
+                          Value="{Binding CpuUsage}"
+                          PointerSize="40"
+                          EnableAnimation="True"
+                          AnimationEasing="{x:Static Easing.SpringOut}"
+                          Position="Cross">
+
+                        <gauges:BarPointer.GradientStops>
+                            <gauges:GaugeGradientStop Value="100" Color="Red"/>
+
+                            <gauges:GaugeGradientStop Value="89" Color="Orange"/>
+                            <gauges:GaugeGradientStop Value="79" Color="Green"/>
+
+
+                            <gauges:GaugeGradientStop Value="0" Color="Green"/>
+
+                        </gauges:BarPointer.GradientStops>
+                    </gauges:BarPointer>
+                </gauges:SfLinearGauge.BarPointers>
+            </gauges:SfLinearGauge>
+
+            <Label Grid.Column="2" 
+                   Text="CPU" 
+                   TextColor="White"
+                   HorizontalOptions="Center"/>
+
+            <gauges:SfLinearGauge
+                  Grid.Column="3"
+                  Orientation="Horizontal"
+                  Minimum="0"
+                  Maximum="100"
+                  WidthRequest="100"
+                  HeightRequest="25"
+                  ShowTicks="False"
+                  ShowLabels="False"
+                  HorizontalOptions="Center"
+                  BackgroundColor="Gray">
+                <gauges:SfLinearGauge.LineStyle>
+                    <gauges:LinearLineStyle 
+                        Thickness="40"
+                        Fill="#222"/>
+
+                </gauges:SfLinearGauge.LineStyle>
+                <gauges:SfLinearGauge.BarPointers>
+                    <gauges:BarPointer
+                          Value="{Binding GpuUsage}"
+                          PointerSize="40"
+                          EnableAnimation="True"
+                          AnimationEasing="{x:Static Easing.SpringOut}"
+                          Position="Cross">
+
+                        <gauges:BarPointer.GradientStops>
+                            <gauges:GaugeGradientStop Value="100" Color="Red"/>
+
+                            <gauges:GaugeGradientStop Value="89" Color="Orange"/>
+                            <gauges:GaugeGradientStop Value="79" Color="Green"/>
+
+
+                            <gauges:GaugeGradientStop Value="0" Color="Green"/>
+
+                        </gauges:BarPointer.GradientStops>
+                    </gauges:BarPointer>
+                </gauges:SfLinearGauge.BarPointers>
+            </gauges:SfLinearGauge>
+
+
+            <Label Grid.Column="3" 
+                   Text="GPU" 
+                   TextColor="White"
+                   HorizontalOptions="Center"/>
+
+            <Label Grid.Column="5" FontSize="13" Text="{Binding StatusMinor}">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="{x:Type Label}" Binding="{Binding HighlightMinor}" Value="True">
+                                <Setter Property="Background" Value="Red" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+        </Grid>
+    </Grid>
+
+</ContentPage>

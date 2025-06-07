@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Visualizer", "Visualizer\Visualizer.csproj", "{F35C7181-C52E-4028-84DC-92F6F5081EFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.Maui", "Vizualizr.Maui\Vizualizr.Maui.csproj", "{F35C7181-C52E-4028-84DC-92F6F5081EFA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{7E867B30-08C6-4CFF-B9D3-1618EB4EF9D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.Backend", "Vizualizr.Backend\Vizualizr.Backend.csproj", "{7E867B30-08C6-4CFF-B9D3-1618EB4EF9D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModels", "ViewModels\ViewModels.csproj", "{6C4A9CC8-3FDB-4ACD-AE2F-6EC07C9E573D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.ViewModels", "Vizualizr.ViewModels\Vizualizr.ViewModels.csproj", "{6C4A9CC8-3FDB-4ACD-AE2F-6EC07C9E573D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceModels", "ServiceModels\ServiceModels.csproj", "{246486DC-690D-46A9-80D0-4A0E5C9A5DAC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceInterfaces", "ServiceInterfaces\ServiceInterfaces.csproj", "{8C4BB16B-EE33-4B55-A93C-9A789AD647A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vizualizr.Backend.Interfaces", "Vizualizr.Backend.Interfaces\Vizualizr.Backend.Interfaces.csproj", "{8C4BB16B-EE33-4B55-A93C-9A789AD647A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +30,6 @@ Global
 		{6C4A9CC8-3FDB-4ACD-AE2F-6EC07C9E573D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C4A9CC8-3FDB-4ACD-AE2F-6EC07C9E573D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C4A9CC8-3FDB-4ACD-AE2F-6EC07C9E573D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{246486DC-690D-46A9-80D0-4A0E5C9A5DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{246486DC-690D-46A9-80D0-4A0E5C9A5DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{246486DC-690D-46A9-80D0-4A0E5C9A5DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{246486DC-690D-46A9-80D0-4A0E5C9A5DAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8C4BB16B-EE33-4B55-A93C-9A789AD647A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8C4BB16B-EE33-4B55-A93C-9A789AD647A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C4BB16B-EE33-4B55-A93C-9A789AD647A3}.Release|Any CPU.ActiveCfg = Release|Any CPU

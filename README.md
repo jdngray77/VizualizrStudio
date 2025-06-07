@@ -8,7 +8,8 @@ Major backlog items include:
  - [ ] State retention - to recover in case of crash
  - [ ] Mac support (though i'm currently using NAudio).
 
-![Screenshot 2025-05-23 234047](https://github.com/user-attachments/assets/95b53c89-acac-4e30-87b1-0b04e009407c)
+![image](https://github.com/user-attachments/assets/b71664fc-9cc5-47e4-b4d5-329eac30054d)
+
 
 ---
 

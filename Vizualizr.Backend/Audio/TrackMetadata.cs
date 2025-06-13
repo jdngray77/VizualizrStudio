@@ -9,8 +9,13 @@
         public string FilePath { get; set; }
         public uint Year { get; set; }
         
-        // Analysis
         public string Key { get; set; }
-        public string BPM { get; set; }
+        
+        /// <summary>
+        /// The bpm loaded from disk, from the file's metadata.
+        ///
+        /// Don't use this. Use BPM from the track's beat info.
+        /// </summary>
+        public float BPM { get; set; } = 0;
     }
 }

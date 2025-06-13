@@ -118,6 +118,8 @@ namespace Vizualizr.Controls.Waveform
                 int startSample = (int)(Progress * trackSamples) - totalVisibleSamples / 2;
                 startSample = Math.Min(startSample, trackSamples - totalVisibleSamples);
 
+                canvas.StrokeColor = Colors.White;
+
                 float midY = rect.Center.Y;
                 canvas.StrokeSize = 1;
                 for (int px = 0; px < pixelsToDraw; px++)
@@ -127,12 +129,12 @@ namespace Vizualizr.Controls.Waveform
                     if (sampleIdx < 0) continue;
                     int endIdx = Math.Min(sampleIdx + samplesPerPixel, trackSamples);
 
-                    // if (AudioUtilities.IsBeat(BeatInfo, sampleIdx))
-                    // {
-                    //     canvas.StrokeColor = Colors.Red;
-                    //     canvas.DrawLine(rect.X + px, 0, rect.X + px, rect.Height);
-                    //     continue;
-                    // }
+                    if (AudioUtilities.IsBeat(BeatInfo, sampleIdx))
+                    {
+                        canvas.StrokeColor = Colors.Red;
+                        canvas.DrawLine(rect.X + px, 0, rect.X + px, rect.Height);
+                        continue;
+                    }
                     
                     float[] slice = Samples[sampleIdx..endIdx];
                     float max = slice.Max(Math.Abs);

@@ -9,7 +9,6 @@
     xmlns:waveform="using:Vizualizr.Controls.Waveform"
     xmlns:utility="clr-namespace:Vizualizr.Utility"
     x:Class="Vizualizr.Views.Player"
-    xmlns:behaviors="clr-namespace:Microsoft.Maui.Controls;assembly=Microsoft.Maui.Controls"
     BackgroundColor="Black"
     Padding="5"
     x:DataType="viewModels:PlayerViewModel">

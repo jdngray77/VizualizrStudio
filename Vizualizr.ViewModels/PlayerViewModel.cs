@@ -29,7 +29,7 @@ namespace ViewModels
             this.trackHypervisor = trackHypervisor;
             this.deckManager = deckManager;
             this.statusService = status;
-            
+
             deck = deckManager.CreateDeck();
             
             deck.TrackLoadBegan += (sender, trackMetadata) =>
@@ -192,7 +192,7 @@ namespace ViewModels
 
         partial void OnProgressPercentageChanged(float value)
         {
-            if (deck == null)
+            if (deck == null || !deck.TrackLoaded)
             {
                 return;
             }

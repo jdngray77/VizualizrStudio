@@ -1,0 +1,340 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vizualizr.MidiMapper.MainPage"
+             Shell.NavBarIsVisible="False"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             BackgroundColor="Black">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Grid">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor"
+                                        Value="Purple" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid 
+        ColumnDefinitions="*"
+        RowDefinitions="Auto, *, 1, 20">
+
+        <Grid
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
+            Grid.Row="0"
+            RowDefinitions="Auto, 5, 1"
+            ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto"
+            Padding="10,4">
+
+            <Label 
+                Grid.Column="0"
+                Text="Device:"
+                FontSize="20"
+                Padding="10,2"
+                VerticalTextAlignment="Center"
+                FontAttributes="Bold"/>
+
+            <Picker
+                Grid.Column="1"
+                BackgroundColor="#333"
+                MinimumWidthRequest="350"
+                ItemsSource="{Binding DeviceNames}"
+                SelectedItem="{Binding SelectedDeviceName}">
+            </Picker>
+
+            <Button
+                Grid.Column="2"
+                TextColor="White"
+                BackgroundColor="Transparent"
+                Text="Refresh Devices"
+                BorderColor="Purple"
+                BorderWidth="2"
+                CornerRadius="0"
+                Margin="20,0,0,0"
+                Command="{Binding RefreshDevicesCommand}"
+                />
+
+            <Button
+                Grid.Column="3"
+                TextColor="White"
+                BackgroundColor="Transparent"
+                Text="Mapping Wizard"
+                BorderColor="Purple"
+                BorderWidth="2"
+                CornerRadius="0"
+                Margin="5,0"
+                Command="{Binding OpenMappingWizardCommand}"
+                />
+
+            <Button
+                Grid.Column="4"
+                TextColor="White"
+                BackgroundColor="Transparent"
+                Text="Test"
+                BorderColor="Purple"
+                BorderWidth="2"
+                CornerRadius="0"
+                Command="{Binding TestMappingCommand}"
+                />
+
+            <Button
+                Grid.Column="6"
+                TextColor="White"
+                BackgroundColor="Transparent"
+                Text="New"
+                BorderColor="Purple"
+                BorderWidth="2"
+                CornerRadius="0"
+                Margin="5,0"
+                Command="{Binding NewMappingCommand}"
+                />
+
+            <Button
+                Grid.Column="7"
+                TextColor="White"
+                BackgroundColor="Transparent"
+                Text="Save As..."
+                BorderColor="Purple"
+                BorderWidth="2"
+                CornerRadius="0"
+                Margin="5,0"
+                Command="{Binding SaveMappingAsCommand}"
+                />
+
+            <Button
+                Grid.Column="8"
+                TextColor="White"
+                BackgroundColor="Transparent"
+                Text="Save"
+                BorderColor="Purple"
+                BorderWidth="2"
+                CornerRadius="0"
+                Margin="5,0"
+                Command="{Binding SaveMappingCommand}"
+                />
+
+            <Rectangle 
+                Margin="0,0,0,0"
+                Grid.ColumnSpan="9"
+                Grid.Row="2"
+                Grid.Column="0"
+                Stroke="White" 
+                Fill="White"/>
+        </Grid>
+
+        <Grid 
+            Grid.Row="1"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
+            Padding="30,20"
+            RowDefinitions="Auto,*"
+            ColumnDefinitions="*,50,*">
+
+            <HorizontalStackLayout
+                Grid.Column="0"
+                Grid.Row="0"
+                Spacing="10">
+                
+                <Label
+                    Text="Inputs" 
+                    FontSize="20"
+                    VerticalTextAlignment="Center"/>
+
+                <Button
+                   Grid.Column="7"
+                   TextColor="White"
+                   BackgroundColor="Transparent"
+                   Text="Add"
+                   BorderColor="Purple"
+                   Padding="5"
+                   BorderWidth="2"
+                   CornerRadius="0"
+                   Command="{Binding AddInputMappingCommand}"
+                   Margin="5,0"/>
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                Grid.Column="2"
+                Grid.Row="0"
+                Spacing="10"
+                HorizontalOptions="End">
+
+                <Label
+                    Text="Outputs" 
+                    FontSize="20"
+                    VerticalTextAlignment="Center"/>
+
+                <Button
+                   Grid.Column="7"
+                   TextColor="White"
+                   BackgroundColor="Transparent"
+                   Text="Add"
+                   BorderColor="Purple"
+                   Padding="5"
+                   BorderWidth="2"
+                   CornerRadius="0"
+                   Margin="5,0"
+                   Command="{Binding AddOutputMappingCommand}"
+                    />
+
+
+
+            </HorizontalStackLayout>
+
+            <Rectangle Grid.Column="1"
+                       Grid.RowSpan="2"
+                       VerticalOptions="Fill"
+                       HorizontalOptions="Start"
+                       BackgroundColor="White"
+                       Stroke="White"
+                       MaximumWidthRequest="1"/>
+
+            <Frame
+                  Grid.Row="1"
+                  Margin="0,30,100,0"
+                  Grid.Column="0"
+                  Padding="5"
+                  BackgroundColor="#333">
+                <CollectionView
+                        ItemsSource="{Binding InputMappings}"
+                        VerticalOptions="Fill"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedInputMapping}">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid 
+                                Padding="20,5"
+                                ColumnDefinitions="*,*,*,*,*"
+                                RowDefinitions="Auto,2"
+                                MinimumHeightRequest="20">
+
+                                <Label
+                                    Grid.Column="0"
+                                    Text="{Binding Action, StringFormat='Action:  {0}'}"/>
+
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding Channel, StringFormat='Channel:  {0}'}"/>
+                                <Label
+                                    Grid.Column="2"
+                                    Text="{Binding Control, StringFormat='Control:  {0}'}"/>
+
+                                <Label
+                                    Grid.Column="3"
+                                    Text="{Binding Velocity, StringFormat='Velocity:  {0}'}"/>
+
+                                <Label
+                                    Grid.Column="4"
+                                    Text="{Binding Type, StringFormat='Input Type:  {0}'}"/>
+
+                                <Rectangle 
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="5"
+                                    Stroke="White"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    
+                </CollectionView>
+            </Frame>
+
+            <Frame
+                  Grid.Row="1"
+                  Margin="100,30,0,0"
+                  Grid.Column="2"
+                  Padding="5"
+                  BackgroundColor="#333">
+                <CollectionView
+                       ItemsSource="{Binding InputMappings}"
+                       VerticalOptions="Fill"
+                       SelectionMode="Single"
+                       SelectedItem="{Binding SelectedInputMapping}">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid 
+                               Padding="20,5"
+                               ColumnDefinitions="*,*,*,*,*"
+                               RowDefinitions="Auto,2"
+                               MinimumHeightRequest="20">
+
+                                <Label
+                                    Grid.Column="0"
+                                    Text="{Binding Action, StringFormat='Action:  {0}'}"/>
+
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding Channel, StringFormat='Channel:  {0}'}"/>
+                                <Label
+                                    Grid.Column="2"
+                                    Text="{Binding Control, StringFormat='Control:  {0}'}"/>
+
+                                <Label
+                                    Grid.Column="3"
+                                    Text="{Binding Velocity, StringFormat='Velocity:  {0}'}"/>
+
+                                <Label
+                                    Grid.Column="4"
+                                    Text="{Binding Type, StringFormat='Input Type:  {0}'}"/>
+
+                                <Rectangle 
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="5"
+                                    Stroke="White"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+            </Frame>
+        </Grid>
+
+        <Rectangle 
+            Grid.Row="2"
+            Grid.ColumnSpan="4"
+            HorizontalOptions="Fill"
+            Stroke="White"/>
+
+        <Grid
+            ColumnDefinitions="Auto,*,Auto"
+            Grid.Row="3">
+
+            <HorizontalStackLayout
+                Grid.Column="0"
+                Spacing="20">       
+                <Label Text="Last Input: "/>
+                <Label Text="{Binding LastInput, FallbackValue='None'}"/>
+            </HorizontalStackLayout>
+
+            <Label 
+                   Grid.Column="2"
+                   Text="{Binding SelectedDeviceName, StringFormat='Device Not Connected {0}'}"
+                   IsVisible="{Binding DeviceNotConnected}"
+                   BackgroundColor="Red"/>
+
+            <Label 
+                   Grid.Column="2"
+                   Text="Device Connected"
+                   IsVisible="{Binding DeviceNotConnected, Converter={StaticResource Key=InvertedBoolConverter}}"
+                   BackgroundColor="Green"/>
+
+        </Grid>
+
+    </Grid>
+</ContentPage>

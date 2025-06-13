@@ -71,7 +71,7 @@ namespace Vizualizr.Backend.Audio
         /// <summary>
         /// Estimates the sample index of the first beat.
         /// </summary>
-        public static int DetectFirstBeat(int sampleRate, int bpm, float[] samples)
+        public static int DetectFirstBeat(int sampleRate, float bpm, float[] samples)
         {
             int beatIntervalSamples = (int)(sampleRate * 60.0 / bpm);
             int windowSize = 1024; 

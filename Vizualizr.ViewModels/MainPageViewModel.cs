@@ -44,7 +44,7 @@ namespace ViewModels
 
         private void SongSelected(object recipient, TrackSelectedMessage message)
         {
-            TrackHypervisor.LoadToDeck(message.Value);
+            TrackHypervisor.LoadToDeckAsync(message.Value);
         }
 
         [ObservableProperty]

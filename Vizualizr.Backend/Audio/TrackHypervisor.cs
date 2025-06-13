@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using NAudio.Wave;
 using Vizualizr.Backend.Audio.Player;
+using Vizualizr.Backend.Messaging;
 using File = TagLib.File;
 
 namespace Vizualizr.Backend.Audio
@@ -32,88 +33,105 @@ namespace Vizualizr.Backend.Audio
         }
 
         /// <summary>
-        /// Selects the track for play, causing it to be loaded onto players
+        /// Selects the track for play, causing it to be loaded onto a chosen deck
         /// in the following order:
         ///
         /// - First player with no track loaded
         /// - If all players have a track loaded, the first player which is not playing.
         /// - If all players are playing, the first player which is not master.
+        ///
+        /// Load occurs in this order:
+        /// - The deck is first provided metadata
+        /// - track samples are loaded from disk, or from memory.
+        /// - The deck is provided with the track
+        /// - The track is analyzed for beat info.
+        /// - A global message of <see cref="TrackAnalysisFinished"/> is broadcast.
         /// 
         /// </summary>
         /// <param name="meta"></param>
-        public void LoadToDeck(TrackMetadata meta)
+        public async Task<(Track?, Deck?)?> LoadToDeckAsync(TrackMetadata meta)
+        {
+            Deck? deck = ChooseDeckForLoad();
+
+            if (deck == null)
+            {
+                Console.WriteLine("No available track decks to load the track.");
+                statusService.SetStatus(Major: "No decks available to load track.", highlightMajor: true);
+                return null;
+            }
+            
+            // load metadata
+            deck.LoadTrackLite(meta);
+
+            // Background load the track data
+            Track? track = await LoadTrackAsync(meta).ConfigureAwait(false);
+            
+            if (track == null)
+            {
+                // Load failed.
+                deck.Unload();
+                statusService.SetStatus(Major: $"Failed to load {meta.Name}", highlightMajor: true);
+                return (null, deck);
+            }
+
+            // Should be redundant, but belt and braces.
+            track.Metadata ??= meta;
+            
+            // Load audio data into the deck; it can now start to be played.
+            deck.LoadTrack(track);
+            
+            // Analyze the audio
+            try
+            {
+                BeatInfo info = await AnalyzeBpmAsync(track).ConfigureAwait(false);
+                track.BeatInfo = info;
+                messenger.Send(new TrackAnalysisFinished(track));
+            }
+            catch (Exception)
+            {
+                statusService.SetStatus(
+                    Major: $"Track Analysis Failed for {track.Metadata.Name}!",
+                    highlightMajor: true);
+            }
+
+            return (track, deck);
+        }
+
+        /// <summary>
+        /// Selects a deck to load a track to.
+        ///
+        /// If all decks are playing, the deck returned will be one that is already loaded
+        /// and playing.
+        /// 
+        /// </summary>
+        /// <returns>
+        /// - Null if there are no decks
+        ///
+        /// - The most suitible deck to load a track to.
+        /// </returns>
+        private Deck? ChooseDeckForLoad()
         {
             var decks = deckManager.GetDecks();
 
             if (decks.Count == 0)
             {
-                return;
+                return null;
             }
 
-            // First player with no track loaded
+            // Best candidate: First player with no track loaded
             var targetDeck = decks.FirstOrDefault(p => !p.TrackLoaded);
 
-            // First player not playing
+            // Second best: First player that is not playing
             if (targetDeck == null)
             {
                 targetDeck = decks.FirstOrDefault(p => !p.IsPlaying);
             }
 
-            // First player that is not master
+            // Worst case - First deck that is not master. Will be actively playing.
             // if (targetPlayer == null)
             //     targetPlayer = trackPlayers.FirstOrDefault(p => !p.IsMaster);
-            
-            if (targetDeck != null)
-            {
-                // load metadata
-                targetDeck.LoadTrackLite(meta);
-                //messenger.Send(new TrackSelectedMessage(meta));
 
-                // Background load the track data.
-                Task.Run(async () =>
-                {
-                    Track? track = await LoadTrackAsync(meta).ConfigureAwait(false);
-
-                    if (track == null)
-                    {
-                        // Load failed.
-                        targetDeck.Unload();
-                        statusService.SetStatus(Major: $"Failed to load {meta.Name}", highlightMajor: true);
-                        return;
-                    }
-                    
-                    targetDeck.LoadTrack(track);
-                    
-                    // if (track.Metadata.BPM == null || track.Metadata.BPM == "0")
-                    // {
-                    //     this.statusService.SetStatus(
-                    //         Minor: $"Analyzing {track.Metadata.Name}");
-                    //
-                    //     trackHypervisor.AnalyzeBpmAsync(track, true)
-                    //         .ContinueWith(it =>
-                    //         {
-                    //             if (it.IsFaulted)
-                    //             {
-                    //                 this.statusService.SetStatus(
-                    //                     Major: $"Track Analysis Failed for {track.Metadata.Name}!",
-                    //                     highlightMajor: true);
-                    //
-                    //                 return;
-                    //             }
-                    //
-                    //             Bpm = it.Result;
-                    //         });
-                    // }
-                    // TODO analyze here, and fire messages upon completion.
-                });
-            }
-            else
-            {
-                // Optional: log or handle the case where no players are available
-                Console.WriteLine("No available track players to load the track.");
-            }
-            
-            //messenger.Send(new TrackSelectedMessage(meta));
+            return targetDeck;
         }
 
         /// <summary>
@@ -125,15 +143,12 @@ namespace Vizualizr.Backend.Audio
         /// <param name="saveOnDisk">If true, when BPM is calculated, will attempt to write back to disk in the track's metadata.</param>
         /// <returns>The known or estimated BPM of the track.</returns>
         /// <exception cref="InvalidOperationException">if input data is bad.</exception>
-        public async Task<float> AnalyzeBpmAsync(
+        public async Task<BeatInfo> AnalyzeBpmAsync(
             Track track,
             bool forceCalculate = false,
             bool saveOnDisk = true)
         {
-            if ((!string.IsNullOrEmpty(track?.Metadata.BPM) && track.Metadata.BPM != "0") && !forceCalculate)
-            {
-                return Convert.ToSingle(track?.Metadata?.BPM);
-            }
+            statusService.SetStatus(Minor: $"Analyzing {track.Metadata.Name}");
             
             if (track?.Samples == null ||
                 track.Samples.Length == 0 ||
@@ -142,9 +157,23 @@ namespace Vizualizr.Backend.Audio
             {
                 throw new InvalidOperationException("Input data not sufficient.");
             }
+            
+            if ((track!.Metadata?.BPM != null && track.Metadata.BPM != 0) && !forceCalculate)
+            {
+                // Already know the bpm, only need to determine the first beat position.
+                int firstBeat = AudioUtilities.DetectFirstBeat(track.SampleRate , track.Metadata.BPM, track.Samples);
+                BeatInfo info = new BeatInfo()
+                {
+                    Bpm = track.Metadata.BPM,
+                    IndexOfFirstBeat = firstBeat
+                };
 
+                return info;
+            }
+            
+            // Don't know any beat info, or have been told to ignore known data.
             BeatInfo beatInfo = await AudioUtilities.AnalyzeBeatAsync(
-                track.Samples,
+                track!.Samples,
                 track.Channels,
                 track.SampleRate)
                 .ConfigureAwait(false);
@@ -166,7 +195,7 @@ namespace Vizualizr.Backend.Audio
                 }
             }
             
-            return beatInfo.Bpm;
+            return beatInfo;
         }
 
         public async Task<Track?> LoadTrackAsync(TrackMetadata metadata)
@@ -258,7 +287,7 @@ namespace Vizualizr.Backend.Audio
                     Album = file.Tag.Album,
                     Year = file.Tag.Year,
                     FilePath = filepath,
-                    BPM = file.Tag.BeatsPerMinute.ToString()
+                    BPM = file.Tag.BeatsPerMinute
                 };
 
                 var pictures = file.Tag.Pictures;

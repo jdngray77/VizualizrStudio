@@ -31,6 +31,13 @@ namespace Vizualizr.Backend.Messaging
         }
     }
 
+    public class TrackAnalysisFinished : ValueChangedMessage<Track>
+    {
+        public TrackAnalysisFinished(Track value) : base(value)
+        {
+        }
+    }
+
     public class StatusMessage
     {
         public StatusMessage(

@@ -11,6 +11,7 @@
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
       <PackageReference Include="NAudio" Version="2.2.1" />
       <PackageReference Include="PortAudioSharp2" Version="1.0.4" />
+      <PackageReference Include="RtMidi.Core" Version="1.0.53" />
       <PackageReference Include="SoundTouch.Net" Version="2.3.2" />
       <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
 	</ItemGroup>

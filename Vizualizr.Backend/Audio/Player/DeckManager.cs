@@ -27,5 +27,15 @@ namespace Vizualizr.Backend.Audio.Player
         {
             return decks.ToImmutableList();
         }
+
+        public Deck? GetDeck(byte deck)
+        {
+            return decks.ElementAtOrDefault(deck);
+        }
+
+        public byte DeckCount()
+        {
+            return (byte)decks.Count();
+        }
     }
 }

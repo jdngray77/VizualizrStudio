@@ -8,7 +8,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style TargetType="Grid">
+            <Style TargetType="Grid" x:Key="SelectableGridStyle">
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -192,8 +192,6 @@
                    Command="{Binding AddOutputMappingCommand}"
                     />
 
-
-
             </HorizontalStackLayout>
 
             <Rectangle Grid.Column="1"
@@ -214,11 +212,12 @@
                         ItemsSource="{Binding InputMappings}"
                         VerticalOptions="Fill"
                         SelectionMode="Single"
-                        SelectedItem="{Binding SelectedInputMapping}">
+                        x:Name="InputMappingList">
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid 
+                                Style="{StaticResource SelectableGridStyle}"
                                 Padding="20,5"
                                 ColumnDefinitions="*,*,*,*,*"
                                 RowDefinitions="Auto,2"
@@ -261,14 +260,15 @@
                   Padding="5"
                   BackgroundColor="#333">
                 <CollectionView
-                       ItemsSource="{Binding InputMappings}"
+                       ItemsSource="{Binding OutputMappings}"
                        VerticalOptions="Fill"
                        SelectionMode="Single"
-                       SelectedItem="{Binding SelectedInputMapping}">
+                       SelectedItem="{Binding SelectedOutputMapping}">
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid 
+                               Style="{StaticResource SelectableGridStyle}"
                                Padding="20,5"
                                ColumnDefinitions="*,*,*,*,*"
                                RowDefinitions="Auto,2"

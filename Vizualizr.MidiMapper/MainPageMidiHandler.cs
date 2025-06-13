@@ -41,7 +41,7 @@ namespace Vizualizr.MidiMapper
         {
             var x = viewModel.InputMappings.FirstOrDefault(x => x.Channel == channel && x.Control == control);
 
-            if (x != null) 
+            if (x == null) 
             {
                 return;
             }

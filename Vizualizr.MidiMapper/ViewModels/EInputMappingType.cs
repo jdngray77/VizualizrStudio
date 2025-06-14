@@ -2,7 +2,7 @@
 {
     public enum EInputMappingType
     {
-        Control,
+        CC,
         Note
     }
 }

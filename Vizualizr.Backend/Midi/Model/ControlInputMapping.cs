@@ -15,25 +15,25 @@ namespace Vizualizr.Backend.Midi.FileModel
         [XmlAttribute]
         public bool Absolute { get; set; } = false;
 
-        /// <summary>
-        /// When relative (Absolute = false) indicates the control value that indicates
-        /// a positive relative change.
-        ///
-        /// i.e set to 127 if 127 is sent whilst turning the control in the direction that should
-        ///     mean 'increase'
-        /// </summary>
-        [XmlAttribute]
-        public byte IncrementValue { get; set; } = 127;
-
-        /// <summary>
-        /// When relative (Absolute = true) indicates the control value that indicates
-        /// a negative relative change.
-        ///
-        /// i.e set to 127 if 127 is sent whilst turning the control in the direction that should
-        ///     mean 'decrease'
-        /// </summary>
-        [XmlAttribute]
-        public byte DecrementValue { get; set; } = 1;
+        // /// <summary>
+        // /// When relative (Absolute = false) indicates the control value that indicates
+        // /// a positive relative change.
+        // ///
+        // /// i.e set to 127 if 127 is sent whilst turning the control in the direction that should
+        // ///     mean 'increase'
+        // /// </summary>
+        // [XmlAttribute]
+        // public byte IncrementValue { get; set; } = 127;
+        //
+        // /// <summary>
+        // /// When relative (Absolute = true) indicates the control value that indicates
+        // /// a negative relative change.
+        // ///
+        // /// i.e set to 127 if 127 is sent whilst turning the control in the direction that should
+        // ///     mean 'decrease'
+        // /// </summary>
+        // [XmlAttribute]
+        // public byte DecrementValue { get; set; } = 1;
 
         [XmlAttribute]
         public byte MinimumValue { get; set; } = 0;
@@ -52,7 +52,7 @@ namespace Vizualizr.Backend.Midi.FileModel
             MinimumValue.ThrowIfOutsideRange(0, 127);
             MaximumValue.ThrowIfOutsideRange(0, 127);
             MinimumValue.ThrowIfGreaterThan(MaximumValue);
-            IncrementValue.ThrowIfOutsideRange(MinimumValue, MaximumValue);
+            //IncrementValue.ThrowIfOutsideRange(MinimumValue, MaximumValue);
         }
     }
 }

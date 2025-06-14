@@ -3,8 +3,12 @@ using RtMidi.Core.Messages;
 using Vizualizr.Backend.Midi.Handling;
 using Vizualizr.MidiMapper.ViewModels;
 
-namespace Vizualizr.MidiMapper
+namespace Vizualizr.MidiMapper.MIDI
 {
+    /// <summary>
+    /// Notifies the MainPageViewModel when the user
+    /// provides midi input
+    /// </summary>
     public class MainPageMidiHandler : IMidiHandler
     {
         private MainPageViewModel viewModel;

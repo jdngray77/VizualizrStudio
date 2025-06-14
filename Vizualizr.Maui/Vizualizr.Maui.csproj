@@ -78,7 +78,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Vizualizr.Backend.Interfaces\Vizualizr.Backend.Interfaces.csproj" />
       <ProjectReference Include="..\Vizualizr.Backend\Vizualizr.Backend.csproj" />
-      <ProjectReference Include="..\Vizualizr.ViewModels\Vizualizr.ViewModels.csproj" />
+      <ProjectReference Include="..\Vizualizr.Maui.ViewModels\Vizualizr.Maui.ViewModels.csproj" />
     </ItemGroup>
 
     <ItemGroup>

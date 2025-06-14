@@ -7,10 +7,10 @@ namespace Vizualizr.Backend.Midi.FileModel
     public class MidiMapping
     {
         public Meta Meta { get; set; }
-        
+
         [XmlArray]
         [XmlArrayItem("Control", typeof(ControlInputMapping))]
         [XmlArrayItem("Note", typeof(NoteInputMapping))]
-        public IList<BaseMidiInputMapping> Inputs { get; set; }
+        public List<BaseMidiInputMapping> Inputs { get; set; } = new List<BaseMidiInputMapping>();
     }
 }

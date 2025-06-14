@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="using:Vizualizr.MidiMapper.ViewModels"
+             xmlns:utility="clr-namespace:Vizualizr.MidiMapper.Utility"
+             x:Class="Vizualizr.MidiMapper.Views.AddInputMappingDialog"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             BackgroundColor="Black"
+             MaximumHeightRequest="660"
+             MaximumWidthRequest="800">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <utility:ByteConverter x:Key="ByteConverter" />
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Top Row: Command and Deck -->
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+                    
+                <Label Text="Command:" VerticalOptions="Center" Margin="0,0,20,0"/>
+                <Picker
+                    x:Name="CommandPicker" 
+                    Grid.Column="1" 
+                    WidthRequest="200" 
+                    BackgroundColor="#333"
+                    SelectedItem="{Binding Command}"
+                    ItemsSource="{Binding AvailableCommands}"/>
+
+                <Label Text="Deck" Grid.Column="3" VerticalOptions="Center"  Margin="0,0,20,0"/>
+                <Picker 
+                        x:Name="DeckPicker" 
+                        Grid.Column="4"
+                        WidthRequest="100" 
+                        SelectedIndex="{Binding Deck}"
+                        BackgroundColor="#333">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:Byte}">
+                            <x:Byte>1</x:Byte>
+                            <x:Byte>2</x:Byte>
+                            <x:Byte>3</x:Byte>
+                            <x:Byte>4</x:Byte>
+                            <x:Byte>5</x:Byte>
+                            <x:Byte>6</x:Byte>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </Grid>
+
+            <Rectangle Stroke="White" MaximumHeightRequest="1"/>
+
+            <!-- Input Selection Section -->
+            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="20">
+                    
+                <!-- Left: Select an Input -->
+                <Frame Grid.Column="0" BorderColor="Gray" Padding="10" HasShadow="False">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Select an Input" FontAttributes="Bold" FontSize="25"/>
+                            
+                        <CollectionView 
+                            HeightRequest="100" 
+                            BackgroundColor="#333"
+                            ItemsSource="{Binding Inputs}"
+                            SelectedItem="{Binding SelectedInput}"
+                            SelectionMode="Single">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="viewModels:InputMappingViewModel">
+                                    <HorizontalStackLayout Spacing="10" >
+                                        <Label
+                                            Text="{Binding Channel, StringFormat='Channel:  {0},'}"/>
+                                            
+                                        <Label
+                                            Text="{Binding Control, StringFormat='Control:  {0},'}"/>
+
+                                        <Label
+                                            Text="{Binding Type, StringFormat='Input Type:  {0}'}"/>
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <Button Text="Clear List" Command="{Binding ClearInputsCommand}"/>
+                        <Label Text="Interact with a control on your device to make it appear above." FontSize="12" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Label 
+                    Grid.Column="1" 
+                    Text="OR" 
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center" 
+                    FontAttributes="Bold"
+                    FontSize="18"/>
+
+                <!-- Right: Manually enter the input -->
+                <Frame Grid.Column="2" BorderColor="Gray" Padding="10" HasShadow="False">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Manually enter the input" FontAttributes="Bold" FontSize="20" />
+                            
+                        <HorizontalStackLayout Spacing="30">
+                            <Label Text="Input Type" VerticalOptions="Center"/>
+                                
+                            <Picker
+                                WidthRequest="200" 
+                                BackgroundColor="#333" 
+                                SelectedIndex="0"
+                                ItemsSource="{Binding AvailableInputTypes}"
+                                SelectedItem="{Binding InputType}">
+                            </Picker>
+                        </HorizontalStackLayout>
+                            
+                        <HorizontalStackLayout Spacing="46">
+                            <Label Text="Channel" VerticalOptions="Center" />
+                            <Entry 
+                                Text="{Binding Channel, Converter={StaticResource ByteConverter}}" 
+                                Placeholder="1-127" 
+                                WidthRequest="200" 
+                                BackgroundColor="#333"/>
+                        </HorizontalStackLayout>
+                            
+                        <HorizontalStackLayout Spacing="34">
+                            <Label Text="Control ID" VerticalOptions="Center"/>
+                            <Entry Text="{Binding Control, Converter={StaticResource ByteConverter}}"  Placeholder="1-127" WidthRequest="200" BackgroundColor="#333" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <Rectangle Stroke="White" MaximumHeightRequest="1"/>
+
+            <!-- Options and Control Type Section -->
+            <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="10">
+                    
+                <!-- Left: Options -->
+                <Frame Grid.Column="0" BorderColor="Gray" Padding="10" HasShadow="False">
+                    <VerticalStackLayout>
+                        <Label Text="Options" FontAttributes="Bold" />
+
+                        <HorizontalStackLayout>
+                            <CheckBox />
+                            <Label Text="Invert Velocity" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout IsEnabled="{Binding IsButton}">
+                            <CheckBox />
+                            <Label Text="Button uses Velocity instead of NoteOff" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout IsEnabled="{Binding IsButton, Converter={StaticResource InvertedBoolConverter}}">
+                            <CheckBox />
+                            <Label Text="Continuous" VerticalOptions="Center"  />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Middle: Control Type -->
+                <Frame Grid.Column="1" BorderColor="Gray" Padding="10" HasShadow="False">
+                    <VerticalStackLayout>
+                        <Label Text="Control Type" FontAttributes="Bold" />
+
+                        <HorizontalStackLayout>
+                            <RadioButton GroupName="ControlType" IsChecked="True" IsEnabled="{Binding IsButton, Converter={StaticResource InvertedBoolConverter}}" />
+                            <Label Text="Absolute" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout>
+                            <RadioButton GroupName="ControlType"  IsEnabled="{Binding IsButton, Converter={StaticResource InvertedBoolConverter}}" />
+                            <Label Text="Relative" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Right: Range -->
+                <Frame Grid.Column="2" BorderColor="Gray" Padding="10" HasShadow="False">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Range" FontAttributes="Bold" />
+
+                        <HorizontalStackLayout Spacing="30"  IsEnabled="{Binding IsButton, Converter={StaticResource InvertedBoolConverter}}">
+                            <Label Text="Minimum" VerticalOptions="Center" />
+                            <Entry Text="0" WidthRequest="60" BackgroundColor="#333"/>
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout Spacing="27"  IsEnabled="{Binding IsButton, Converter={StaticResource InvertedBoolConverter}}">
+                            <Label Text="Maximum" VerticalOptions="Center" />
+                            <Entry Text="127" WidthRequest="60" BackgroundColor="#333" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <HorizontalStackLayout
+                HorizontalOptions="End"
+                Spacing="20">
+                <Button Text="Cancel" Command="{Binding CancelCommand}"/>
+                <Button Text="Add" Command="{Binding AddCommand}"/>
+                
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>

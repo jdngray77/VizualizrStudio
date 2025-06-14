@@ -1,4 +1,5 @@
-﻿using Vizualizr.Backend.Midi.FileModel;
+﻿using System.Xml.Serialization;
+using Vizualizr.Backend.Midi.FileModel;
 
 namespace Vizualizr.Backend.Midi.Model
 {
@@ -7,6 +8,7 @@ namespace Vizualizr.Backend.Midi.Model
         // For weird controls that use velocity max and min
         // to indicate that the note is on or off instead of 
         // NoteOff
+        [XmlAttribute]
         public bool UsesVelocityInsteadOfNoteOff { get; set; }
     }
 }

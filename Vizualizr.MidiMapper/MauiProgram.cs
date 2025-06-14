@@ -2,6 +2,7 @@
 using Vizualizr.Backend.Midi;
 using Vizualizr.MidiMapper.ViewModels;
 using CommunityToolkit.Maui;
+using Vizualizr.MidiMapper.MIDI;
 
 namespace Vizualizr.MidiMapper;
 public static class MauiProgram
@@ -22,6 +23,10 @@ public static class MauiProgram
         builder.Services.AddSingleton<DeviceService>();
         builder.Services.AddSingleton<MidiIO>();
         builder.Services.AddSingleton<MainPageMidiHandler>();
+        builder.Services.AddSingleton<MauiServices>();
+        builder.Services.AddTransient<AddInputMappingDialogViewModel>();
+
+
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

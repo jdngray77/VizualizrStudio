@@ -1,4 +1,5 @@
-﻿using Vizualizr.MidiMapper.ViewModels;
+﻿using Vizualizr.MidiMapper.MIDI;
+using Vizualizr.MidiMapper.ViewModels;
 
 namespace Vizualizr.MidiMapper;
 

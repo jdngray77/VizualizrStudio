@@ -4,6 +4,7 @@
              x:Class="Vizualizr.MidiMapper.MainPage"
              Shell.NavBarIsVisible="False"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:local="clr-namespace:Vizualizr.MidiMapper.Utility"
              BackgroundColor="Black">
 
     <ContentPage.Resources>
@@ -25,6 +26,7 @@
             </Style>
 
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <local:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -37,7 +39,7 @@
             VerticalOptions="Fill"
             Grid.Row="0"
             RowDefinitions="Auto, 5, 1"
-            ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto"
+            ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto,Auto"
             Padding="10,4">
 
             <Label 
@@ -95,6 +97,18 @@
                 Grid.Column="6"
                 TextColor="White"
                 BackgroundColor="Transparent"
+                Text="Open"
+                BorderColor="Purple"
+                BorderWidth="2"
+                CornerRadius="0"
+                Margin="5,0"
+                Command="{Binding OpenCommand}"
+                />
+
+            <Button
+                Grid.Column="7"
+                TextColor="White"
+                BackgroundColor="Transparent"
                 Text="New"
                 BorderColor="Purple"
                 BorderWidth="2"
@@ -104,7 +118,7 @@
                 />
 
             <Button
-                Grid.Column="7"
+                Grid.Column="8"
                 TextColor="White"
                 BackgroundColor="Transparent"
                 Text="Save As..."
@@ -116,7 +130,7 @@
                 />
 
             <Button
-                Grid.Column="8"
+                Grid.Column="9"
                 TextColor="White"
                 BackgroundColor="Transparent"
                 Text="Save"
@@ -129,7 +143,7 @@
 
             <Rectangle 
                 Margin="0,0,0,0"
-                Grid.ColumnSpan="9"
+                Grid.ColumnSpan="10"
                 Grid.Row="2"
                 Grid.Column="0"
                 Stroke="White" 
@@ -225,7 +239,7 @@
 
                                 <Label
                                     Grid.Column="0"
-                                    Text="{Binding Action, StringFormat='Action:  {0}'}"/>
+                                    Text="{Binding Command, StringFormat='Action:  {0}'}"/>
 
                                 <Label
                                     Grid.Column="1"
@@ -312,7 +326,7 @@
             Stroke="White"/>
 
         <Grid
-            ColumnDefinitions="Auto,*,Auto"
+            ColumnDefinitions="Auto,*,Auto,*,Auto"
             Grid.Row="3">
 
             <HorizontalStackLayout
@@ -324,12 +338,20 @@
 
             <Label 
                    Grid.Column="2"
+                   FontAttributes="Bold"
+                   FontSize="15"
+                   Text="{Binding Message}"
+                   IsVisible="{Binding Message, Converter={StaticResource StringNotNullOrEmptyConverter}}"
+                   BackgroundColor="Red"/>
+            
+            <Label 
+                   Grid.Column="4"
                    Text="{Binding SelectedDeviceName, StringFormat='Device Not Connected {0}'}"
                    IsVisible="{Binding DeviceNotConnected}"
                    BackgroundColor="Red"/>
 
             <Label 
-                   Grid.Column="2"
+                   Grid.Column="4"
                    Text="Device Connected"
                    IsVisible="{Binding DeviceNotConnected, Converter={StaticResource Key=InvertedBoolConverter}}"
                    BackgroundColor="Green"/>

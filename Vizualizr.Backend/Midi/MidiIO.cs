@@ -1,4 +1,5 @@
-﻿using RtMidi.Core;
+﻿using NAudio.CoreAudioApi;
+using RtMidi.Core;
 using RtMidi.Core.Devices;
 using Vizualizr.Backend.Midi.Handling;
 
@@ -16,7 +17,55 @@ namespace Vizualizr.Backend.Midi
 
         public void RegisterHandler(IMidiHandler handler)
         {
+            if (_handlers.Contains(handler))
+            {
+                return;
+            }
+
             _handlers.Add(handler);
+
+            if (_isInitialized)
+            {
+                // Already initialized; add now.
+                // If not yet initialised, will be plugged in later.
+                foreach (var device in GetDevices())
+                {
+                    device.NoteOn += handler.OnNoteOn;
+                    device.NoteOff += handler.OnNoteOff;
+                    device.ControlChange += handler.OnControlChange;
+                }
+            }
+        }
+        
+        public void DeregisterHandler(IMidiHandler handler)
+        {
+            if (!_handlers.Contains(handler))
+            {
+                return;
+            }
+
+            _handlers.Remove(handler);
+
+            if (!_isInitialized)
+            {
+                foreach (var device in GetDevices())
+                {
+                    try
+                    {
+                        device.NoteOn -= handler.OnNoteOn;
+                    } catch { }
+                    
+                    try
+                    {
+                       device.NoteOff -= handler.OnNoteOff;
+                    } catch { }
+                    
+                    try
+                    {
+                        device.ControlChange -= handler.OnControlChange;
+                    } catch { }
+                }
+            }
         }
 
         public IMidiInputDevice[] GetDevices()

@@ -62,11 +62,12 @@ namespace Vizualizr.Backend.Midi.Handling
                     }
                     else
                     {
-                        interpretedValue = msg.Value == ctrl.IncrementValue ? 1 :
-                            msg.Value == ctrl.DecrementValue ? -1 : 0;
+                        // TODO
+                        // interpretedValue = msg.Value == ctrl.IncrementValue ? 1 :
+                        //     msg.Value == ctrl.DecrementValue ? -1 : 0;
                     }
 
-                    Console.WriteLine($"Control matched: {ctrl.MapsTo} -> delta={interpretedValue}");
+                    //Console.WriteLine($"Control matched: {ctrl.MapsTo} -> delta={interpretedValue}");
                     // TODO: apply interpretedValue to gain/pitch/etc
                     return;
                 }

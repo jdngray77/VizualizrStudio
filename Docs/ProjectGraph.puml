@@ -1,0 +1,29 @@
+﻿@startuml ProjectDependencyGraph
+title Vizualizr Project Dependency Graph
+
+top to bottom direction
+
+' Define styles (optional but useful for clarity)
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+skinparam shadowing false
+
+' Define components (modules or projects)
+component "Vizualizr.Backend" as backend
+component "Vizualizr.Backend.Interfaces" as backendInterfaces
+component "Vizualizr.Maui" as maui
+component "Vizualizr.DevPlayground" as playground
+component "Vizualizr.MidiMapper" as midimapper
+component "Vizualizr.Maui.ViewModels" as ViewModels
+
+' Define dependencies 
+
+backendInterfaces <-- backend
+
+
+backend <-- midimapper
+backend <-- ViewModels
+ViewModels <-- maui
+
+@enduml

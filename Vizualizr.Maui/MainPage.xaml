@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:Vizualizr="using:Vizualizr"
              xmlns:views="using:Vizualizr.Views"
-             xmlns:viewModels="clr-namespace:ViewModels;assembly=Vizualizr.ViewModels"
+             xmlns:viewModels="clr-namespace:ViewModels;assembly=Vizualizr.Maui.ViewModels"
              xmlns:gauges="http://schemas.syncfusion.com/maui"
              x:Class="Vizualizr.MainPage"
              x:DataType="viewModels:MainPageViewModel">

@@ -7,13 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.Maui", "Vizualizr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.Backend", "Vizualizr.Backend\Vizualizr.Backend.csproj", "{7E867B30-08C6-4CFF-B9D3-1618EB4EF9D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.ViewModels", "Vizualizr.ViewModels\Vizualizr.ViewModels.csproj", "{6C4A9CC8-3FDB-4ACD-AE2F-6EC07C9E573D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.Maui.ViewModels", "Vizualizr.Maui.ViewModels\Vizualizr.Maui.ViewModels.csproj", "{6C4A9CC8-3FDB-4ACD-AE2F-6EC07C9E573D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.Backend.Interfaces", "Vizualizr.Backend.Interfaces\Vizualizr.Backend.Interfaces.csproj", "{8C4BB16B-EE33-4B55-A93C-9A789AD647A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.MidiMapper", "Vizualizr.MidiMapper\Vizualizr.MidiMapper.csproj", "{B683022E-223C-491F-9891-6CEBF4B8B7BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vizualizr.DevPlayground", "Vizualizr.DevPlayground\Vizualizr.DevPlayground.csproj", "{4B48E26C-AB82-4DAB-A240-35B377498400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vizualizr.Backend.Maui", "Vizualizr.Backend.Maui\Vizualizr.Backend.Maui.csproj", "{9680C155-6DE3-414F-AC90-152675B9A545}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{4B48E26C-AB82-4DAB-A240-35B377498400}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B48E26C-AB82-4DAB-A240-35B377498400}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B48E26C-AB82-4DAB-A240-35B377498400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9680C155-6DE3-414F-AC90-152675B9A545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9680C155-6DE3-414F-AC90-152675B9A545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9680C155-6DE3-414F-AC90-152675B9A545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9680C155-6DE3-414F-AC90-152675B9A545}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

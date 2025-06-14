@@ -8,7 +8,8 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              BackgroundColor="Black"
              MaximumHeightRequest="660"
-             MaximumWidthRequest="800">
+             MaximumWidthRequest="800"
+             x:DataType="viewModels:AddInputMappingDialogViewModel">
     <ContentPage.Resources>
         <ResourceDictionary>
             <utility:ByteConverter x:Key="ByteConverter" />
@@ -28,7 +29,7 @@
                     Grid.Column="1" 
                     WidthRequest="200" 
                     BackgroundColor="#333"
-                    SelectedItem="{Binding Command}"
+                    SelectedItem="{Binding SelectedCommand}"
                     ItemsSource="{Binding AvailableCommands}"/>
 
                 <Label Text="Deck" Grid.Column="3" VerticalOptions="Center"  Margin="0,0,20,0"/>
@@ -110,7 +111,7 @@
                                 BackgroundColor="#333" 
                                 SelectedIndex="0"
                                 ItemsSource="{Binding AvailableInputTypes}"
-                                SelectedItem="{Binding InputType}">
+                                SelectedItem="{Binding SelectedInputType}">
                             </Picker>
                         </HorizontalStackLayout>
                             
@@ -118,14 +119,16 @@
                             <Label Text="Channel" VerticalOptions="Center" />
                             <Entry 
                                 Text="{Binding Channel, Converter={StaticResource ByteConverter}}" 
-                                Placeholder="1-127" 
+                                Placeholder="1-17" 
                                 WidthRequest="200" 
                                 BackgroundColor="#333"/>
                         </HorizontalStackLayout>
                             
                         <HorizontalStackLayout Spacing="34">
                             <Label Text="Control ID" VerticalOptions="Center"/>
-                            <Entry Text="{Binding Control, Converter={StaticResource ByteConverter}}"  Placeholder="1-127" WidthRequest="200" BackgroundColor="#333" />
+                            <Entry Text="{Binding Control, 
+                                        Converter={StaticResource ByteConverter}}"
+                                        Placeholder="1-127" WidthRequest="200" BackgroundColor="#333" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </Frame>
@@ -198,7 +201,6 @@
                 Spacing="20">
                 <Button Text="Cancel" Command="{Binding CancelCommand}"/>
                 <Button Text="Add" Command="{Binding AddCommand}"/>
-                
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ContentPage.Content>
